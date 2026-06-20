@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+supabase
+python-dotenv
+pydantic
+pyjwt
+bcrypt
+python-multipart
+websockets
