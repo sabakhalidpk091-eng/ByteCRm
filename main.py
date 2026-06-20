@@ -19,14 +19,13 @@ app.add_middleware(
 )
 
 # Ensure uploads directory exists (Try-except for Read-only filesystems like Vercel)
-try:
-    if not os.path.exists("uploads"):
-        os.makedirs("uploads")
-except OSError:
-    print("Warning: Could not create uploads directory (Read-only filesystem)")
-
-# Serve static files for uploads
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+if os.path.exists("uploads"):
+    # Serve static files for uploads only if directory exists
+    app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+else:
+    # On Vercel, we might not have a local uploads dir. 
+    # For a real app, you'd use Supabase Storage.
+    print("Warning: Uploads directory not found, skipping static mount.")
 
 # WebSocket Endpoint
 @app.websocket("/ws/{user_id}")
