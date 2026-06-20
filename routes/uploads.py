@@ -8,8 +8,12 @@ from datetime import datetime
 router = APIRouter(prefix="/uploads", tags=["Uploads"])
 
 UPLOAD_DIR = "uploads"
-if not os.path.exists(UPLOAD_DIR):
-    os.makedirs(UPLOAD_DIR)
+try:
+    if not os.path.exists(UPLOAD_DIR):
+        os.makedirs(UPLOAD_DIR)
+except OSError:
+    # On Vercel, we can't create dirs in root. We could use /tmp if needed.
+    UPLOAD_DIR = "/tmp" 
 
 @router.post("/")
 async def upload_file(

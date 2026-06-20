@@ -18,9 +18,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Ensure uploads directory exists
-if not os.path.exists("uploads"):
-    os.makedirs("uploads")
+# Ensure uploads directory exists (Try-except for Read-only filesystems like Vercel)
+try:
+    if not os.path.exists("uploads"):
+        os.makedirs("uploads")
+except OSError:
+    print("Warning: Could not create uploads directory (Read-only filesystem)")
 
 # Serve static files for uploads
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
